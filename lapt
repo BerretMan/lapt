@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Vérifier si un paquet est donné en argument
+if [ -z "$1" ]; then
+    echo "Usage: $0 <nom_du_paquet>"
+    exit 1
+fi
+
+PACKAGE=$1
+INSTALL_PATH="$HOME/.local/bin"
+
+mkdir -p "$INSTALL_PATH"
+
+echo "Download $PACKAGE..."
+apt-get download "$PACKAGE" || { echo "Erreur : impossible de télécharger $PAQUET"; exit 1; }
+
+
+DFILE=$(ls "${PACKAGE}"*.deb)
+EXTRACT="./${PACKAGE}_e"
+dpkg-deb -x "$DFILE" "$EXTRACT"
+find "$EXTRACT" -type f -exec mv -t "$INSTALL_PATH" -- {} +
+
+#Clear trash file
+
+rm -rf "$EXTRACT"
+rm "$DFILE"
+rm -rf "$HOME/.local.bin/*.gz"
+echo "$1 a bien était installé"
